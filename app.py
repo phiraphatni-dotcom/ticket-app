@@ -1,19 +1,21 @@
-from flask import Flask, render_template
-import mysql.connector
 import os
+import mysql.connector
+from flask import Flask, render_template
 from dotenv import load_dotenv
 
-load_dotenv()  # โหลดค่าจากไฟล์ .env
+# โหลดค่าจาก .env สำหรับรันในเครื่อง (บน Vercel จะใช้อ่านจาก Environment Variables โดยอัตโนมัติ)
+load_dotenv()
 
 app = Flask(__name__)
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="10.199.8.40",
-        port="3308",
-        user="phiraphat.ni",
-        password="683380049-5",
-        database="phiraphat.ni_ticket_db"
+        host=os.environ.get("DB_HOST"),
+        port=int(os.environ.get("DB_PORT", 13686)),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME"),
+        ssl_disabled=True
     )
 
 @app.route("/")
