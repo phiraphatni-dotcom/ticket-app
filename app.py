@@ -14,18 +14,22 @@ def get_db_connection():
         user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
         database=os.environ.get("DB_NAME"),
+        ssl_disabled=False,
         ssl_verify_identity=False
     )
 
 @app.route("/")
 def index():
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM concerts")
-    concerts = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render_template("index.html", concerts=concerts)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM concerts")
+        concerts = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render_template("index.html", concerts=concerts)
+    except Exception as e:
+        return f"Database Connection Error: {str(e)}", 500
 
 if __name__ == "__main__":
     app.run(debug=True)
