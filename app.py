@@ -3,7 +3,6 @@ import mysql.connector
 from flask import Flask, render_template
 from dotenv import load_dotenv
 
-# โหลดค่าจาก .env สำหรับรันในเครื่อง (บน Vercel จะใช้อ่านจาก Environment Variables โดยอัตโนมัติ)
 load_dotenv()
 
 app = Flask(__name__)
@@ -15,7 +14,7 @@ def get_db_connection():
         user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
         database=os.environ.get("DB_NAME"),
-        ssl_disabled=True
+        ssl_mode="REQUIRED"
     )
 
 @app.route("/")
